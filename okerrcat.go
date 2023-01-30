@@ -122,7 +122,7 @@ func getenv(key, fallback string) string {
 
 func parse_args() {
 	def_role := getenv("ROLE", "main")
-	def_template := getenv("TEMPLATE", "/etc/okerr/cat.html.tpl")
+	def_template := getenv("TEMPLATE", "/etc/okerr/cat.html.tmpl")
 	sys_hostname, _ := os.Hostname()
 	def_hostname := getenv("HOSTNAME", sys_hostname)
 	//def_minutes, _ := strconv.Atoi(getenv("MINUTES", "0"))
