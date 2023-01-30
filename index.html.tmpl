@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>okerr cat </title>
+        <meta http-equiv="refresh" content="60">
+        <link rel="icon" type="image/png" href="https://okerr.com/okerr-favicon.png" />
+    </head>
+    <body>
+        <div align=center>
+            <div style="width: 50%; text-align: left;">
+                <h1>{{.role}} cat is alive!</h1>
+
+                <img src='https://static.okerr.com/cats/cat-{{.role}}.jpg' align=right>
+                <p>
+                me: {{.host}} (ext: {{.myip}})<br>
+                IP from auth NS ({{.nsname}}): {{.catip}}<br>
+                
+                
+                time: {{.timestr}}<br>
+                role: {{.role}}<br>
+                status={{.status}}<br>
+                </p>
+                {{ if .left }}
+                    <p>
+                    Will switch status in ~<i>{{.left}}</i> minutes<br>
+                    </p>
+                {{end}}
+
+
+                {{ if eq .status "ERR" }}
+                    {{ if eq .myip .catip }}
+                    <p>
+                       Authoritative DNS servers still points to me, this should change in few seconds/minutes. 
+                    </p>
+                    {{ else }}
+                    <p>
+                        Authoritative DNS servers already points to other server. 
+                        If you see this page, probably you used old DNS record cached in local DNS server or browser.
+                        Other users (who do not have this cached record) already visiting other server.
+                        Cached record it will expire soon and you will get page from new server.
+                     </p>
+                     {{ end }}
+                {{ end }}
+
+                <p>
+                Just do nothing, keep this page open, wait a little and you will see page from next live server with highest priority. 
+                </p>
+            </div>
+        </div>        
+    </body>
+</html>
