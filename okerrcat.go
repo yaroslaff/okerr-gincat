@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -127,7 +128,7 @@ func index(c *gin.Context) {
 
 	m := prepare(c)
 
-	c.HTML(http.StatusOK, tpl_file, m)
+	c.HTML(http.StatusOK, path.Base(tpl_file), m)
 }
 
 func getenv(key, fallback string) string {
