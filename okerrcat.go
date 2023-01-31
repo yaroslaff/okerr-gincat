@@ -121,7 +121,7 @@ func json(c *gin.Context) {
 
 	//tpl.Execute(&buf, ctx)
 	//c.String(http.StatusOK, buf.String())
-	c.JSON(http.StatusOK, m)
+	c.IndentedJSON(http.StatusOK, m)
 }
 
 func index(c *gin.Context) {
