@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -73,7 +74,7 @@ func resolveNS(zone string) ([]string, error) {
 	return nslist, nil
 }
 
-func index(c *gin.Context) {
+func prepare(c *gin.Context) map[string]string {
 	//var buf bytes.Buffer
 	dt := time.Now()
 	_, now_mins, _ := dt.Clock()
@@ -99,17 +100,34 @@ func index(c *gin.Context) {
 
 	timestr := dt.Format("01-02-2006 15:04:05")
 
-	//tpl.Execute(&buf, ctx)
-	//c.String(http.StatusOK, buf.String())
-	c.HTML(http.StatusOK, tpl_file, gin.H{
+	m := map[string]string{
 		"role":    role,
 		"host":    hostname,
 		"myip":    myip,
 		"timestr": timestr,
 		"status":  status,
-		"left":    left,
+		"left":    strconv.Itoa(left),
 		"nsname":  nslist[0],
-		"catip":   alist[0]})
+		"catip":   alist[0]}
+
+	return m
+
+}
+
+func json(c *gin.Context) {
+
+	m := prepare(c)
+
+	//tpl.Execute(&buf, ctx)
+	//c.String(http.StatusOK, buf.String())
+	c.JSON(http.StatusOK, m)
+}
+
+func index(c *gin.Context) {
+
+	m := prepare(c)
+
+	c.HTML(http.StatusOK, tpl_file, m)
 }
 
 func getenv(key, fallback string) string {
@@ -183,6 +201,7 @@ func main() {
 	r.LoadHTMLFiles(tpl_file)
 	r.SetTrustedProxies([]string{"127.0.0.1"})
 	r.GET("/", index)
+	r.GET("/json", json)
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
