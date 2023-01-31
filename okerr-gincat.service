@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI okerr-cat
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+EnvironmentFile=/etc/default/okerr-cat
+WorkingDirectory=/tmp
+ExecStart=/usr/local/bin/okerr-gincat
+
+[Install]
+WantedBy=multi-user.target
+
