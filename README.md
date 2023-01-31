@@ -6,7 +6,7 @@ okerr-cat implementation in Golang with Gin
 go build
 cp okerr-gincat /usr/local/bin
 cp cat.html.tmpl /etc/okerr/
-echo ROLE=sorry /etc/default/okerr-cat
+echo ROLE=sorry > /etc/default/okerr-cat
 
 cp okerr-gincat.service /etc/systemd/system/
 systemctl enable --now okerr-gincat
