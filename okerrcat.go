@@ -98,11 +98,14 @@ func prepare(c *gin.Context) map[string]string {
 	check(err)
 
 	for {
+		log.Println("Resolve", cat_host, "via", nsiplist[0].String())
 		alist, err = resolveA(cat_host, nsiplist[0].String())
 
 		if err == nil {
 			// resolved ok
 			break
+		} else {
+			log.Println("ResolveA error:", err)
 		}
 	}
 
