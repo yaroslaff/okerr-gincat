@@ -99,8 +99,10 @@ func prepare(c *gin.Context) map[string]string {
 	check(err)
 
 	for {
-		ns := nsiplist[rand.Intn(len(nsiplist))].String()
-		log.Println("Resolve", cat_host, "via", ns)
+		idx := rand.Intn(len(nsiplist))
+		ns := nsiplist[idx].String()
+		log.Println("Resolve", cat_host, "via ns #", idx, ns)
+		println("NSLIST:", nsiplist)
 		alist, err = resolveA(cat_host, ns)
 
 		if err == nil {
