@@ -81,6 +81,7 @@ func prepare(c *gin.Context) map[string]string {
 	_, now_mins, _ := dt.Clock()
 	var status string
 	var left int
+	var alist []string
 
 	if now_mins >= minutes {
 		status = "ERR"
@@ -96,7 +97,10 @@ func prepare(c *gin.Context) map[string]string {
 	nsiplist, err := net.DefaultResolver.LookupNetIP(context.Background(), "ip4", nslist[0])
 	check(err)
 
-	alist, err := resolveA(cat_host, nsiplist[0].String())
+	for err = nil; err == nil; {
+		alist, err = resolveA(cat_host, nsiplist[0].String())
+	}
+
 	check(err)
 
 	timestr := dt.Format("01-02-2006 15:04:05")
