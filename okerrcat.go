@@ -83,6 +83,7 @@ func prepare(c *gin.Context) map[string]string {
 	var status string
 	var left int
 	var alist []string
+	var idx int
 
 	if now_mins >= minutes {
 		status = "ERR"
@@ -96,7 +97,7 @@ func prepare(c *gin.Context) map[string]string {
 	check(err)
 
 	for {
-		idx := rand.Intn(len(nslist))
+		idx = rand.Intn(len(nslist))
 		log.Println("idx:", idx)
 		log.Printf("ns: %v\n", nslist[idx])
 		log.Printf("nslist: %v\n", nslist)
@@ -117,6 +118,8 @@ func prepare(c *gin.Context) map[string]string {
 		}
 	}
 
+	log.Printf("Resolved! %s", alist[0])
+
 	check(err)
 
 	timestr := dt.Format("01-02-2006 15:04:05")
@@ -128,7 +131,7 @@ func prepare(c *gin.Context) map[string]string {
 		"timestr": timestr,
 		"status":  status,
 		"left":    strconv.Itoa(left),
-		"nsname":  nslist[0],
+		"nsname":  nslist[idx],
 		"catip":   alist[0]}
 
 	return m
