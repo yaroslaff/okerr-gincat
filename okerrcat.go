@@ -95,16 +95,13 @@ func prepare(c *gin.Context) map[string]string {
 	nslist, err := resolveNS(cat_zone)
 	check(err)
 
-	nsiplist, err := net.DefaultResolver.LookupNetIP(context.Background(), "ip4", nslist[0])
-	check(err)
-
 	for {
 		idx := rand.Intn(len(nslist))
 
 		nsiplist, err := net.DefaultResolver.LookupNetIP(context.Background(), "ip4", nslist[idx])
 		check(err)
 
-		nsip := nsiplist[idx].String()
+		nsip := nsiplist[0].String()
 		log.Println("Resolve", cat_host, "via ns #", idx, nsip)
 		fmt.Printf("nslist: %v", nsiplist)
 
