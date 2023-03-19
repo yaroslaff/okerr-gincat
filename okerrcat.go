@@ -102,7 +102,8 @@ func prepare(c *gin.Context) map[string]string {
 		idx := rand.Intn(len(nsiplist))
 		ns := nsiplist[idx].String()
 		log.Println("Resolve", cat_host, "via ns #", idx, ns)
-		println("NSLIST:", nsiplist)
+		fmt.Printf("nslist: %v", nsiplist)
+
 		alist, err = resolveA(cat_host, ns)
 
 		if err == nil {
@@ -224,5 +225,6 @@ func main() {
 			"message": "pong",
 		})
 	})
+	rand.Seed(time.Now().Unix())
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
