@@ -84,6 +84,9 @@ func prepare(c *gin.Context) map[string]string {
 	var left int
 	var alist []string
 	var idx int
+	var req_started int
+
+	req_started = int(time.Now().Unix())
 
 	retries := 0
 
@@ -138,6 +141,7 @@ func prepare(c *gin.Context) map[string]string {
 		"left":    strconv.Itoa(left),
 		"nsname":  nslist[idx],
 		"retries": strconv.Itoa(retries),
+		"time":    strconv.Itoa(int(time.Now().Unix()) - req_started),
 		"catip":   alist[0]}
 
 	return m
