@@ -97,14 +97,15 @@ func prepare(c *gin.Context) map[string]string {
 
 	for {
 		idx := rand.Intn(len(nslist))
-		//log.Println("idx:", idx)
+		log.Println("idx:", idx)
+		log.Printf("ns: %v\n", nslist[idx])
+		log.Printf("nslist: %v\n", nslist)
 
 		nsiplist, err := net.DefaultResolver.LookupNetIP(context.Background(), "ip4", nslist[idx])
 		check(err)
 
 		nsip := nsiplist[0].String()
-		//log.Println("Resolve", cat_host, "via ns #", idx, nsip)
-		//fmt.Printf("nslist: %v\n", nslist)
+		log.Println("Resolve", cat_host, "via ns #", idx, nsip)
 
 		alist, err = resolveA(cat_host, nsip)
 
