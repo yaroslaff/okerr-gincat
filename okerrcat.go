@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math/rand"
 	"net"
 	"net/http"
 	"os"
@@ -98,8 +99,9 @@ func prepare(c *gin.Context) map[string]string {
 	check(err)
 
 	for {
-		log.Println("Resolve", cat_host, "via", nsiplist[0].String())
-		alist, err = resolveA(cat_host, nsiplist[0].String())
+		ns := nsiplist[rand.Intn(len(nsiplist))].String()
+		log.Println("Resolve", cat_host, "via", ns)
+		alist, err = resolveA(cat_host, ns)
 
 		if err == nil {
 			// resolved ok
