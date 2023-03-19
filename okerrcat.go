@@ -128,6 +128,7 @@ func prepare(c *gin.Context) map[string]string {
 		nsip := list2ipv4(nsiplist)
 
 		log.Printf("nsiplist: %v\n", nsiplist)
+		log.Printf("nsip: %v\n", nsip)
 
 		resolved_nsip = time.Now().Unix()
 
