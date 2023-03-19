@@ -85,6 +85,8 @@ func prepare(c *gin.Context) map[string]string {
 	var alist []string
 	var idx int
 
+	retries := 0
+
 	if now_mins >= minutes {
 		status = "ERR"
 		left = 0
@@ -116,6 +118,7 @@ func prepare(c *gin.Context) map[string]string {
 			// resolved ok
 			break
 		} else {
+			retries++
 			log.Println("ResolveA error:", err)
 		}
 	}
@@ -134,6 +137,7 @@ func prepare(c *gin.Context) map[string]string {
 		"status":  status,
 		"left":    strconv.Itoa(left),
 		"nsname":  nslist[idx],
+		"retries": strconv.Itoa(retries),
 		"catip":   alist[0]}
 
 	return m
