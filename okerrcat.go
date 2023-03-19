@@ -97,7 +97,7 @@ func prepare(c *gin.Context) map[string]string {
 	nsiplist, err := net.DefaultResolver.LookupNetIP(context.Background(), "ip4", nslist[0])
 	check(err)
 
-	for err = nil; err == nil; {
+	for err = nil; err != nil; {
 		alist, err = resolveA(cat_host, nsiplist[0].String())
 	}
 
