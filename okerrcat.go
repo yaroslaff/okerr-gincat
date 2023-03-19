@@ -39,7 +39,7 @@ func resolveA(host string, ns string) ([]string, error) {
 		PreferGo: true,
 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
 			d := net.Dialer{
-				Timeout: time.Millisecond * time.Duration(10000),
+				Timeout: time.Millisecond * time.Duration(1000),
 			}
 			return d.DialContext(ctx, network, net.JoinHostPort(ns, dns_config.Port))
 		},
@@ -114,7 +114,7 @@ func prepare(c *gin.Context) map[string]string {
 			// resolved ok
 			break
 		} else {
-			//log.Println("ResolveA error:", err)
+			log.Println("ResolveA error:", err)
 		}
 	}
 
