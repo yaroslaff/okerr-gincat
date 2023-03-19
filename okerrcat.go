@@ -39,7 +39,7 @@ func resolveA(host string, ns string) ([]string, error) {
 		PreferGo: true,
 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
 			d := net.Dialer{
-				Timeout: time.Second,
+				Timeout: time.Second * time.Duration(2),
 			}
 
 			if len(ns) == 0 {
