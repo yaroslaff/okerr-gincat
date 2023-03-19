@@ -41,6 +41,11 @@ func resolveA(host string, ns string) ([]string, error) {
 			d := net.Dialer{
 				Timeout: time.Millisecond * time.Duration(1000),
 			}
+
+			if len(ns) == 0 {
+				ns = "1.1.1.1"
+			}
+
 			return d.DialContext(ctx, network, net.JoinHostPort(ns, dns_config.Port))
 		},
 	}
@@ -76,6 +81,15 @@ func resolveNS(zone string) ([]string, error) {
 	return nslist, nil
 }
 
+func list2ipv4(iplist []string) string {
+	for _, ip := range iplist {
+		if !strings.Contains(ip, ":") {
+			return ip
+		}
+	}
+	return ""
+}
+
 func prepare(c *gin.Context) map[string]string {
 	//var buf bytes.Buffer
 	dt := time.Now()
@@ -105,18 +119,21 @@ func prepare(c *gin.Context) map[string]string {
 
 	for {
 		idx = rand.Intn(len(nslist))
-		/*
-			log.Println("idx:", idx)
-			log.Printf("ns: %v\n", nslist[idx])
-			log.Printf("nslist: %v\n", nslist)
-		*/
+		log.Println("idx:", idx)
+		log.Printf("ns: %v\n", nslist[idx])
+		log.Printf("nslist: %v\n", nslist)
 
-		nsiplist, err := net.DefaultResolver.LookupNetIP(context.Background(), "ip4", nslist[idx])
+		// nsiplist, err := net.DefaultResolver.LookupNetIP(context.Background(), "ip4", nslist[idx])
+		nsiplist, err := resolveA(nslist[idx], "")
+		nsip := list2ipv4(nsiplist)
+
+		log.Printf("nsiplist: %v\n", nsiplist)
+
 		resolved_nsip = time.Now().Unix()
 
 		check(err)
 
-		nsip := nsiplist[0].String()
+		//nsip := nsiplist[0]
 		//log.Println("Resolve", cat_host, "via ns #", idx, nsip)
 
 		alist, err = resolveA(cat_host, nsip)
