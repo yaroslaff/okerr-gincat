@@ -84,9 +84,9 @@ func prepare(c *gin.Context) map[string]string {
 	var left int
 	var alist []string
 	var idx int
-	var req_started int
+	var req_started, resolved_ns, resolved_nsip, resolved_a int64
 
-	req_started = int(time.Now().Unix())
+	req_started = time.Now().Unix()
 
 	retries := 0
 
@@ -99,6 +99,8 @@ func prepare(c *gin.Context) map[string]string {
 	}
 
 	nslist, err := resolveNS(cat_zone)
+	resolved_ns = time.Now().Unix()
+
 	check(err)
 
 	for {
@@ -110,6 +112,8 @@ func prepare(c *gin.Context) map[string]string {
 		*/
 
 		nsiplist, err := net.DefaultResolver.LookupNetIP(context.Background(), "ip4", nslist[idx])
+		resolved_nsip = time.Now().Unix()
+
 		check(err)
 
 		nsip := nsiplist[0].String()
@@ -125,12 +129,17 @@ func prepare(c *gin.Context) map[string]string {
 			log.Println("ResolveA error:", err)
 		}
 	}
+	resolved_a = time.Now().Unix()
 
 	//log.Printf("Resolved! %s", alist[0])
 
 	check(err)
 
 	timestr := dt.Format("01-02-2006 15:04:05")
+
+	t1 := resolved_ns - req_started
+	t2 := resolved_nsip - req_started
+	t3 := resolved_a - req_started
 
 	m := map[string]string{
 		"role":    role,
@@ -141,7 +150,9 @@ func prepare(c *gin.Context) map[string]string {
 		"left":    strconv.Itoa(left),
 		"nsname":  nslist[idx],
 		"retries": strconv.Itoa(retries),
-		"time":    strconv.Itoa(int(time.Now().Unix()) - req_started),
+		"t1":      strconv.Itoa(int(t1)),
+		"t2":      strconv.Itoa(int(t2)),
+		"t3":      strconv.Itoa(int(t3)),
 		"catip":   alist[0]}
 
 	return m
