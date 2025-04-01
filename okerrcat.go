@@ -249,7 +249,7 @@ func main() {
 	tpl, err = template.ParseFiles(tpl_file)
 	check(err)
 
-	res, err := http.Get("https://ifconfig.me/")
+	res, err := http.Get("https://ifconfig.me/ip")
 	check(err)
 	defer res.Body.Close()
 
