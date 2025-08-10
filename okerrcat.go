@@ -161,6 +161,8 @@ func prepare(c *gin.Context) map[string]string {
 	t2 := resolved_nsip - req_started
 	t3 := resolved_a - req_started
 
+	fmt.Println("render IP", myip)
+
 	m := map[string]string{
 		"role":    role,
 		"host":    hostname,
@@ -274,7 +276,7 @@ func main() {
 	tpl, err = template.ParseFiles(tpl_file)
 	check(err)
 
-	myip, err := GetWithUA(ip_url)
+	myip, err = GetWithUA(ip_url)
 	check(err)
 	fmt.Println("Got IP:", myip, "from", ip_url)
 
