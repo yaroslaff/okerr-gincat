@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"math/rand"
 	"net"
@@ -21,6 +22,7 @@ import (
 
 var (
 	tpl_file string
+	ip_url   string
 	tpl      *template.Template
 	role     string
 	minutes  int
@@ -204,12 +206,14 @@ func getenv(key, fallback string) string {
 func parse_args() {
 	def_role := getenv("ROLE", "main")
 	def_template := getenv("TEMPLATE", "/etc/okerr/cat.html.tmpl")
+	def_ip_url := getenv("IP_URL", "https://ip.me/")
 	sys_hostname, _ := os.Hostname()
 	def_hostname := getenv("HOSTNAME", sys_hostname)
 	//def_minutes, _ := strconv.Atoi(getenv("MINUTES", "0"))
 
 	flag.StringVar(&role, "r", def_role, "Role: main/backup/sorry")
 	flag.StringVar(&tpl_file, "t", def_template, "Location of HTML template")
+	flag.StringVar(&ip_url, "u", def_ip_url, "IP URL ")
 	flag.StringVar(&hostname, "n", def_hostname, "hostName")
 	//flag.IntVar(&minutes, "m", def_minutes, "hostName")
 
@@ -239,6 +243,27 @@ func check(e error) {
 	}
 }
 
+func GetWithUA(url string) (string, error) {
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("User-Agent", "curl/7.88.1")
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(data)), nil
+}
+
 func main() {
 	var err error
 
@@ -249,7 +274,11 @@ func main() {
 	tpl, err = template.ParseFiles(tpl_file)
 	check(err)
 
-	res, err := http.Get("https://ifconfig.me/ip")
+	myip, err := GetWithUA(ip_url)
+	check(err)
+	fmt.Println("Got IP:", myip, "from", ip_url)
+
+	/*res, err := http.Get(ip_url)
 	check(err)
 	defer res.Body.Close()
 
@@ -258,7 +287,7 @@ func main() {
 	n, err := res.Body.Read(bs)
 	myip = string(bs[:n])
 
-	fmt.Println("IP:", myip)
+	fmt.Println("Got IP:", myip, "from", ip_url)*/
 
 	r := gin.Default()
 	r.LoadHTMLFiles(tpl_file)
